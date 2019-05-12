@@ -1,0 +1,58 @@
+[
+  {
+    "name": "standard",
+    "position": "one"
+  },
+  {
+    "name": "assassin",
+    "position": "two"
+  },
+  {
+    "name": "aubergine",
+    "position": "three"
+  },
+  {
+    "name": "black_and_white",
+    "position": "four"
+  },
+  {
+    "name": "blue_water",
+    "position": "five"
+  },
+  {
+    "name": "bright_color",
+    "position": "six"
+  },
+  {
+    "name": "dark",
+    "position": "seven"
+  },
+  {
+    "name": "night",
+    "position": "eight"
+  },
+  {
+    "name": "retro",
+    "position": "nine"
+  },
+  {
+    "name": "shade_of_gray",
+    "position": "ten"
+  },
+  {
+    "name": "silver",
+    "position": "eleven"
+  },
+  {
+    "name": "ultra_light",
+    "position": "twelve"
+  },
+  {
+    "name": "vintage_old",
+    "position": "thirteen"
+  },
+  {
+    "name": "wy",
+    "position": "fourteen"
+  }
+]

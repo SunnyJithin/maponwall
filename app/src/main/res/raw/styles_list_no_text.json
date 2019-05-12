@@ -1,0 +1,58 @@
+[
+  {
+    "name": "standard_no_text",
+    "position": "one"
+  },
+  {
+    "name": "assassin_no_text",
+    "position": "two"
+  },
+  {
+    "name": "aubergine_no_text",
+    "position": "three"
+  },
+  {
+    "name": "black_and_white_no_text",
+    "position": "four"
+  },
+  {
+    "name": "blue_water_no_text",
+    "position": "five"
+  },
+  {
+    "name": "bright_color_no_text",
+    "position": "six"
+  },
+  {
+    "name": "dark_no_text",
+    "position": "seven"
+  },
+  {
+    "name": "night_no_text",
+    "position": "eight"
+  },
+  {
+    "name": "retro_no_text",
+    "position": "nine"
+  },
+  {
+    "name": "shade_of_gray_no_text",
+    "position": "ten"
+  },
+  {
+    "name": "silver_no_text",
+    "position": "eleven"
+  },
+  {
+    "name": "ultra_light_no_text",
+    "position": "twelve"
+  },
+  {
+    "name": "vintage_old_no_text",
+    "position": "thirteen"
+  },
+  {
+    "name": "wy_no_text",
+    "position": "fourteen"
+  }
+]

@@ -1,0 +1,146 @@
+[
+  {
+    "stylers": [
+      {
+        "color": "#ff7000"
+      },
+      {
+        "saturation": "100"
+      },
+      {
+        "lightness": "69"
+      },
+      {
+        "gamma": "2.04"
+      },
+      {
+        "weight": "1.17"
+      }
+    ]
+  },
+  {
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#cb8536"
+      }
+    ]
+  },
+  {
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "elementType": "labels.text.stroke",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape",
+    "stylers": [
+      {
+        "saturation": "26"
+      },
+      {
+        "lightness": "-8"
+      },
+      {
+        "gamma": "0.98"
+      },
+      {
+        "weight": "2.45"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "saturation": 30
+      },
+      {
+        "lightness": 30
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "saturation": 20
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "saturation": -20
+      },
+      {
+        "lightness": 20
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "saturation": -30
+      },
+      {
+        "lightness": 10
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "saturation": 25
+      },
+      {
+        "lightness": 25
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "stylers": [
+      {
+        "color": "#ecc080"
+      },
+      {
+        "lightness": -20
+      }
+    ]
+  }
+]
