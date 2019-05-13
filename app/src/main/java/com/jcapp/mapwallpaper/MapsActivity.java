@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -61,6 +62,7 @@ import com.jcapp.mapwallpaper.models.Style;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -216,6 +218,43 @@ public class MapsActivity extends AppCompatActivity
         openSearchScreen();
     }
 
+    @OnClick(R.id.shareButton)
+    public void shareButtonClick() {
+        shareBitMap();
+    }
+
+    private void shareBitMap() {
+
+        if(bitmap!=null) {
+            // save bitmap to cache directory
+            try {
+
+                File cachePath = new File(getCacheDir(), "images");
+                cachePath.mkdirs(); // don't forget to make the directory
+                FileOutputStream stream = new FileOutputStream(cachePath + "/image.png"); // overwrites this image every time
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                stream.flush();
+                stream.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            File imagePath = new File(getCacheDir(), "images");
+            File newFile = new File(imagePath, "image.png");
+            Uri contentUri = FileProvider.getUriForFile(this, "com.jcapp.mapwallpaper.fileprovider", newFile);
+
+            if (contentUri != null) {
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
+                shareIntent.setType("image/png");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                startActivity(Intent.createChooser(shareIntent, "Choose an app"));
+            }
+        }
+    }
+
     @OnClick(R.id.currentLocation)
     public void currentLocation() {
         getDeviceLocation();
@@ -286,6 +325,10 @@ public class MapsActivity extends AppCompatActivity
     }
 
     private void checkPermission() {
+
+        captureScreen();
+        openWallPaperScreen();
+        /*
         int permissionCheck =
                 ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
@@ -295,7 +338,7 @@ public class MapsActivity extends AppCompatActivity
         } else {
             captureScreen();
             openWallPaperScreen();
-        }
+        }*/
     }
 
     @Override
@@ -372,51 +415,17 @@ public class MapsActivity extends AppCompatActivity
 
     public void captureScreen() {
         GoogleMap.SnapshotReadyCallback callback = snapshot -> {
-            // TODO Auto-generated method stub
             bitmap = snapshot;
-            OutputStream fout     = null;
-            String       filePath = System.currentTimeMillis() + ".jpeg";
             try {
-                fout = openFileOutput(filePath, Context.MODE_PRIVATE);
-                // Write the string to the file
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fout);
                 imageView.setImageBitmap(bitmap);
-                fout.flush();
-                fout.close();
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                Log.d("ImageCapture", "FileNotFoundException");
-                Log.d("ImageCapture", e.getMessage());
-                filePath = "";
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                Log.d("ImageCapture", "IOException");
-                Log.d("ImageCapture", e.getMessage());
-                filePath = "";
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            // openShareImageDialog(filePath);
         };
 
         googleMap.snapshot(callback);
     }
 
-    public void openShareImageDialog(String filePath) {
-        File file = this.getFileStreamPath(filePath);
-        if (!filePath.equals("")) {
-            final ContentValues values = new ContentValues(2);
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-            values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
-            final Uri contentUriFile =
-                    getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                                                values);
-
-            final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-            intent.setType("image/jpeg");
-            intent.putExtra(android.content.Intent.EXTRA_STREAM, contentUriFile);
-            startActivity(Intent.createChooser(intent, "Share Image"));
-        }
-    }
 
     public List<Style> getStyleList(boolean showText) {
         String json;

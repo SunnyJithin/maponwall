@@ -2,14 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
 
-    signingConfigs {
-        release {
-            storeFile file('/Users/qbuser/Documents/Maponwall keystore')
-            storePassword 'maponwall'
-            keyAlias = 'maponwall'
-            keyPassword 'maponwall'
-        }
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -29,12 +21,10 @@ android {
             debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
         debug {
             debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
 }

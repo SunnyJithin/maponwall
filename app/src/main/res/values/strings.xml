@@ -14,5 +14,7 @@
         connection.</string>
     <string name="error_billing_unavailable">Billing unavailable.</string>
     <string name="error_billing_default">Billing unavailable. Please check your device.</string>
+    <string name="set_as_lock_screen">Set as Lock screen</string>
+    <string name="set_as_home_screen">Set as Home screen</string>
 
 </resources>
