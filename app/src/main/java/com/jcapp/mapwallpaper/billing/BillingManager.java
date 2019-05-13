@@ -78,9 +78,8 @@ public class BillingManager implements PurchasesUpdatedListener {
      * want to make it easy for an attacker to replace the public key with one
      * of their own and then fake messages from the server.
      */
-    private static final String BASE_64_ENCODED_PUBLIC_KEY =
-            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApZaWbcTkZWte3nmckNwZBbh6sMwumjlsXrkV7AyygR4eCpXU1LLghO6hBLM7YFBGK/NJL0Jt/6Y30sm3lF76NkaLV3ErhG8OKoQN4+h62n0/Xc+xgL22n5iRBmcvFcdF8OOEQLFDEAzSY7eVI1SeWXWQ7yl2gGmiIMSWR7wGQ3edkCQDzxFjCtW0FgbLHC6068t4fMxFK4Qa8j9rTEyvrBAh3O9oUUghZkDNBODdZ7nihq1iS5UsHgo2n6rvQ7w2AFPesWSBAx3GWSHkNpi4JNmKwwy7pVWVuR9BO7uvwzpaN4NR4Cg5JnD5mRqk40sF8xmnIDZmcNkfNrLIFeZAWwIDAQAB\n" +
-                                                             "\n";
+    private static final String BASE_64_ENCODED_PUBLIC_KEY ="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnF73bBqop/df74bEPqXcg7N5t5D55NzMxDdqbUV6Qh0+kcrzibhbqm8E9REsxi3Q7fTtLm4rdckOxm1lg+RbCgHcNxyHZsC+U5AWX1tiVi1Q9w9aiEvxtkVw5bawJoLt+t18tKUbpQme5e+xafREf5cyCJg+mJ6jKFUTi1x5r4jof6/kUpBRcbpNZe7mfzjSxVf0ZjDlHGFEjxFZOHsh7G+VjmnhYmn45zH/ZeQ5QOmRFbdnnsKVeF9XjRTw414ZlrBUPzM+eIyXdSAWfmhFVNmlw55UnA2AGbeWwIUaV9CACFxwcGB/VCUqSu43q1UgY9FaNLEwpH+IBhqN2kwGwwIDAQAB";
+
 
     /**
      * Listener to the updates that happen when purchases list was updated or consumption of the
@@ -183,21 +182,12 @@ public class BillingManager implements PurchasesUpdatedListener {
     public void querySkuDetailsAsync(@SkuType final String itemType, final List<String> skuList,
                                      final SkuDetailsResponseListener listener) {
         // Creating a runnable from the request to use it inside our connection retry policy below
-        Runnable queryRequest = new Runnable() {
-            @Override
-            public void run() {
-                // Query the purchase async
-                SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-                params.setSkusList(skuList).setType(itemType);
-                mBillingClient.querySkuDetailsAsync(params.build(),
-                        new SkuDetailsResponseListener() {
-                            @Override
-                            public void onSkuDetailsResponse(int responseCode,
-                                                             List<SkuDetails> skuDetailsList) {
-                                listener.onSkuDetailsResponse(responseCode, skuDetailsList);
-                            }
-                        });
-            }
+        Runnable queryRequest = () -> {
+            // Query the purchase async
+            SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+            params.setSkusList(skuList).setType(itemType);
+            mBillingClient.querySkuDetailsAsync(params.build(),
+                                                listener);
         };
 
         executeServiceRequest(queryRequest);

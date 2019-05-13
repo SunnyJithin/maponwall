@@ -76,7 +76,6 @@ public class AcquireFragment extends DialogFragment {
         Toolbar toolbar = root.findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         toolbar.setNavigationOnClickListener(v -> dismiss());
-        toolbar.setTitle(R.string.button_purchase);
         return root;
     }
 
@@ -158,6 +157,10 @@ public class AcquireFragment extends DialogFragment {
             final UiManager uiManager = createUiManager(mAdapter, mBillingProvider);
             mAdapter.setUiManager(uiManager);
             // Filling the list with all the data to render subscription rows
+            List<String> inAppSkus = uiManager.getDelegatesFactory()
+                    .getSkuList(SkuType.INAPP);
+            addSkuRows(dataList, inAppSkus, SkuType.INAPP, null);
+/*
             List<String> subscriptionsSkus = uiManager.getDelegatesFactory()
                     .getSkuList(SkuType.SUBS);
             addSkuRows(dataList, subscriptionsSkus, SkuType.SUBS, new Runnable() {
@@ -167,8 +170,12 @@ public class AcquireFragment extends DialogFragment {
                     List<String> inAppSkus = uiManager.getDelegatesFactory()
                             .getSkuList(SkuType.INAPP);
                     addSkuRows(dataList, inAppSkus, SkuType.INAPP, null);
+
+                    Log.d(TAG, "querySkuDetails() got subscriptions and inApp SKU details lists for: 1 "
+                               + dataList);
+
                 }
-            });
+            });*/
         }
     }
 
@@ -198,8 +205,9 @@ public class AcquireFragment extends DialogFragment {
                                 mRecyclerView.addItemDecoration(new CardsWithHeadersDecoration(
                                         mAdapter,
                                         (int) res.getDimension(R.dimen.row_gap)));
-                                mRecyclerView.setLayoutManager(
-                                        new LinearLayoutManager(getContext()));
+                                LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getContext());
+                                linearLayoutManager.setReverseLayout(true);
+                                mRecyclerView.setLayoutManager(linearLayoutManager);
                             }
 
                             mAdapter.updateData(inList);

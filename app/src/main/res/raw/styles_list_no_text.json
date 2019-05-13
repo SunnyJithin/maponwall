@@ -4,6 +4,10 @@
     "position": "one"
   },
   {
+    "name": "satellite",
+    "position": "satellite"
+  },
+  {
     "name": "assassin_no_text",
     "position": "two"
   },

@@ -27,7 +27,7 @@ import com.jcapp.mapwallpaper.models.SkuRowData;
  * Handles Ui specific to "premium" - non-consumable in-app item row
  */
 public class PremiumDelegate extends UiManagingDelegate {
-    public static final String SKU_ID = "premium";
+    public static final String SKU_ID = "maponwallpro_1";
 
     public PremiumDelegate(BillingProvider billingProvider) {
         super(billingProvider);

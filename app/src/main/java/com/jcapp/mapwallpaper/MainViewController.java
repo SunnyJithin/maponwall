@@ -37,10 +37,6 @@ public class MainViewController {
     private final UpdateListener mUpdateListener;
     private       MapsActivity   mActivity;
 
-    // Tracks if we currently own subscriptions SKUs
-    private boolean mGoldMonthly;
-    private boolean mGoldYearly;
-
     // Tracks if we currently own a premium car
     private boolean mIsPremium;
 
@@ -77,15 +73,10 @@ public class MainViewController {
 
         @Override
         public void onPurchasesUpdated(List<Purchase> purchaseList) {
-            mGoldMonthly = false;
-            mGoldYearly = false;
 
             for (Purchase purchase : purchaseList) {
-                switch (purchase.getSku()) {
-                    case PremiumDelegate.SKU_ID:
-                        Log.d(TAG, "You are Premium! Congratulations!!!");
-                        mIsPremium = true;
-                        break;
+                if (PremiumDelegate.SKU_ID.equals(purchase.getSku())) {
+                    mIsPremium = true;
                 }
             }
 
