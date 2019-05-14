@@ -3,7 +3,6 @@ package com.jcapp.mapwallpaper;
 import android.Manifest;
 import android.animation.Animator;
 import android.app.WallpaperManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,17 +13,20 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -61,15 +63,16 @@ import com.jcapp.mapwallpaper.billing.BillingProvider;
 import com.jcapp.mapwallpaper.models.Style;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
@@ -119,7 +122,7 @@ public class MapsActivity extends AppCompatActivity
     private static final int    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private final        LatLng mDefaultLocation                         =
             new LatLng(-33.8523341, 151.2106085);
-    private static final int    DEFAULT_ZOOM                             = 10;
+    private static final int    DEFAULT_ZOOM                             = 8;
     private static final String SELECTED_POSITION                        = "selected_position";
     private static final String PURCHASE_STATUS                          = "purchase_status";
 
@@ -218,6 +221,20 @@ public class MapsActivity extends AppCompatActivity
         openSearchScreen();
     }
 
+    @OnClick(R.id.saveToGallery)
+    public void saveToGallery() {
+        int permissionCheck =
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
+        } else {
+            saveImage();
+        }
+    }
+
+
     @OnClick(R.id.shareButton)
     public void shareButtonClick() {
         shareBitMap();
@@ -225,13 +242,14 @@ public class MapsActivity extends AppCompatActivity
 
     private void shareBitMap() {
 
-        if(bitmap!=null) {
+        if (bitmap != null) {
             // save bitmap to cache directory
             try {
 
                 File cachePath = new File(getCacheDir(), "images");
                 cachePath.mkdirs(); // don't forget to make the directory
-                FileOutputStream stream = new FileOutputStream(cachePath + "/image.png"); // overwrites this image every time
+                FileOutputStream stream = new FileOutputStream(
+                        cachePath + "/image.png"); // overwrites this image every time
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 stream.flush();
                 stream.close();
@@ -241,13 +259,17 @@ public class MapsActivity extends AppCompatActivity
             }
 
             File imagePath = new File(getCacheDir(), "images");
-            File newFile = new File(imagePath, "image.png");
-            Uri contentUri = FileProvider.getUriForFile(this, "com.jcapp.mapwallpaper.fileprovider", newFile);
+            File newFile   = new File(imagePath, "image.png");
+            Uri contentUri =
+                    FileProvider.getUriForFile(this, "com.jcapp.mapwallpaper.fileprovider",
+                                               newFile);
 
             if (contentUri != null) {
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving app to read this file
+                shareIntent.addFlags(
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION); // temp permission for receiving
+                // app to read this file
                 shareIntent.setType("image/png");
                 shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
                 startActivity(Intent.createChooser(shareIntent, "Choose an app"));
@@ -285,6 +307,41 @@ public class MapsActivity extends AppCompatActivity
 
     @OnClick(R.id.setAsWallpaper)
     public void setAsWallpaper() {
+        setWallPaperSettingsChoser();
+    }
+
+    private void setWallPaperSettingsChoser() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            View checkBoxView =
+                    View.inflate(this, R.layout.dialog_settings_layout, null);
+            TextView checkBoxLock = checkBoxView.findViewById(R.id.checkBoxLock);
+            TextView checkBoxHome = checkBoxView.findViewById(R.id.checkBoxHome);
+            TextView setAsBoth    = checkBoxView.findViewById(R.id.setAsBoth);
+            AlertDialog alertDialog = builder.setView(checkBoxView)
+                    .show();
+
+            checkBoxLock.setOnClickListener(view -> {
+                setWallPaper(WallpaperManager.FLAG_LOCK);
+                alertDialog.dismiss();
+            });
+            checkBoxHome.setOnClickListener(view -> {
+                setWallPaper(WallpaperManager.FLAG_SYSTEM);
+                alertDialog.dismiss();
+            });
+            setAsBoth.setOnClickListener(view -> {
+                setWallPaper(-1);
+                alertDialog.dismiss();
+            });
+
+
+        } else {
+            animateAndSetWallpaper(false);
+        }
+    }
+
+    private void animateAndSetWallpaper(boolean set) {
 
         setAsWallpaper.startAnimation(); //start loading
 
@@ -292,17 +349,21 @@ public class MapsActivity extends AppCompatActivity
             WallpaperManager wm = WallpaperManager.getInstance(MapsActivity.this);
             try {
                 if (bitmap != null) {
-                    wm.setBitmap(bitmap);
+                    if (!set) {
+                        wm.setBitmap(bitmap);
+                    }
                     setAsWallpaper.revertAnimation(() -> {
                         setAsWallpaper.setText(getString(R.string.success));
                         setAsWallpaper.setBackground(ContextCompat.getDrawable(MapsActivity.this,
-                                                                               R.drawable.button_shape_default_rounded));
+                                                                               R.drawable
+                                                                                       .button_shape_default_rounded));
                     });
                 } else {
                     setAsWallpaper.revertAnimation(() -> {
                         setAsWallpaper.setText(getString(R.string.failed));
                         setAsWallpaper.setBackground(ContextCompat.getDrawable(MapsActivity.this,
-                                                                               R.drawable.button_shape_default_rounded));
+                                                                               R.drawable
+                                                                                       .button_shape_default_rounded));
                     });
                 }
                 closePopUp();
@@ -310,17 +371,45 @@ public class MapsActivity extends AppCompatActivity
                 setAsWallpaper.revertAnimation(() -> {
                     setAsWallpaper.setText(getString(R.string.failed));
                     setAsWallpaper.setBackground(ContextCompat.getDrawable(MapsActivity.this,
-                                                                           R.drawable.button_shape_default_rounded));
+                                                                           R.drawable
+                                                                                   .button_shape_default_rounded));
                 });
             }
         }, 1500);
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setWallPaper(int condition) {
+
+        new Thread(() -> {
+            try {
+                WallpaperManager wm = WallpaperManager.getInstance(MapsActivity.this);
+                if (wm.isWallpaperSupported()) {
+                    switch (condition) {
+                        case WallpaperManager.FLAG_LOCK:
+                            wm.setBitmap(bitmap, null, true, WallpaperManager.FLAG_LOCK);
+                            break;
+                        case WallpaperManager.FLAG_SYSTEM:
+                            wm.setBitmap(bitmap, null, true, WallpaperManager.FLAG_SYSTEM);
+                            break;
+                        default:
+                            wm.setBitmap(bitmap, null, true, WallpaperManager.FLAG_LOCK);
+                            wm.setBitmap(bitmap, null, true, WallpaperManager.FLAG_SYSTEM);
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        animateAndSetWallpaper(true);
     }
 
     private void closePopUp() {
         new Handler().postDelayed(() -> {
             wallpaperAnim.setVisibility(View.GONE);
             isOpen = false;
+            setAsWallpaper.setText(getString(R.string.set_as_wallpaper));
         }, 1500);
     }
 
@@ -364,6 +453,16 @@ public class MapsActivity extends AppCompatActivity
                 }
 
             }
+
+            case 101:
+                if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    saveImage();
+                } else {
+                    Log.e("value", "Permission Denied, You cannot use local drive .");
+                }
+                break;
+
             default:
                 break;
         }
@@ -697,7 +796,7 @@ public class MapsActivity extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 Place  place  = Autocomplete.getPlaceFromIntent(data);
                 LatLng latLng = place.getLatLng();
-
+                googleMap.clear();
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
                 if (showMarker) {
                     googleMap.addMarker(new MarkerOptions().position(latLng).icon(
@@ -806,4 +905,31 @@ public class MapsActivity extends AppCompatActivity
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+    private void saveImage() {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
+        Date             now       = new Date();
+        String           fileName  = formatter.format(now) + ".jpg";
+
+        String root  = Environment.getExternalStorageDirectory().toString();
+        File   myDir = new File(root);
+        myDir.mkdirs();
+        String fname = "Image-" + fileName + ".jpg";
+        File   file  = new File(myDir, fname);
+        if (file.exists()) {
+            file.delete();
+        }
+        Log.i("LOAD", root + fname);
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        closePopUp();
+    }
+
 }

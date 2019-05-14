@@ -1,24 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D0252525"
     android:gravity="center"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
-    <CheckBox
+    <TextView
         android:id="@+id/checkBoxLock"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:text="@string/set_as_lock_screen" />
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/set_as_lock_screen"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp" />
+
     <View
         android:layout_width="match_parent"
+        android:layout_height="1dp"
         android:background="@android:color/white"
-        android:layout_height="1dp"/>
-    <CheckBox
+        android:textColor="@android:color/darker_gray" />
+
+    <TextView
         android:id="@+id/checkBoxHome"
         android:layout_width="match_parent"
-        android:textSize="14sp"
+        android:layout_height="45dp"
         android:layout_marginTop="8dp"
-        android:layout_height="wrap_content"
-        android:text="@string/set_as_home_screen" />
+        android:gravity="center"
+        android:text="@string/set_as_home_screen"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/white" />
+
+    <TextView
+        android:id="@+id/setAsBoth"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="@string/set_both"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="14sp" />
 </LinearLayout>
