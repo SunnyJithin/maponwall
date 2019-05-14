@@ -23,13 +23,17 @@ import android.view.ViewAnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.constraintlayout.widget.Guideline;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -100,6 +104,9 @@ public class MapsActivity extends AppCompatActivity
     @BindView(R.id.linearLayout)
     ConstraintLayout mainContent;
 
+    @BindView(R.id.mapCard)
+    CardView mapCard;
+
     @BindView(R.id.wallpaperAnim)
     ConstraintLayout wallpaperAnim;
 
@@ -115,9 +122,16 @@ public class MapsActivity extends AppCompatActivity
     @BindView(R.id.setAsWallpaper)
     CircularProgressButton setAsWallpaper;
 
+    @BindView(R.id.progressBar1)
+    ProgressBar progressBar;
+
+    @BindView(R.id.guideline2)
+    Guideline guideline2;
+
     private BillingManager     mBillingManager;
     private MainViewController mViewController;
     private AcquireFragment    mAcquireFragment;
+    ConstraintSet constraintSet;
 
     private static final int    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private final        LatLng mDefaultLocation                         =
@@ -396,6 +410,7 @@ public class MapsActivity extends AppCompatActivity
                             wm.setBitmap(bitmap, null, true, WallpaperManager.FLAG_LOCK);
                             wm.setBitmap(bitmap, null, true, WallpaperManager.FLAG_SYSTEM);
                     }
+
                 }
 
             } catch (IOException e) {
@@ -410,24 +425,12 @@ public class MapsActivity extends AppCompatActivity
             wallpaperAnim.setVisibility(View.GONE);
             isOpen = false;
             setAsWallpaper.setText(getString(R.string.set_as_wallpaper));
-        }, 1500);
+        }, 500);
     }
 
     private void checkPermission() {
-
         captureScreen();
         openWallPaperScreen();
-        /*
-        int permissionCheck =
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-        } else {
-            captureScreen();
-            openWallPaperScreen();
-        }*/
     }
 
     @Override
@@ -513,16 +516,26 @@ public class MapsActivity extends AppCompatActivity
 
 
     public void captureScreen() {
-        GoogleMap.SnapshotReadyCallback callback = snapshot -> {
-            bitmap = snapshot;
-            try {
-                imageView.setImageBitmap(bitmap);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        };
+        progressBar.setVisibility(View.VISIBLE);
+        imageView.setVisibility(View.GONE);
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapCard.getLayoutParams();
+        params.bottomToBottom = R.id.linearLayout;
+        mapCard.requestLayout();
 
-        googleMap.snapshot(callback);
+        new Handler().postDelayed(() -> {
+            GoogleMap.SnapshotReadyCallback callback = snapshot -> {
+                bitmap = snapshot;
+                try {
+                    imageView.setImageBitmap(bitmap);
+                    progressBar.setVisibility(View.GONE);
+                    imageView.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            };
+
+            googleMap.snapshot(callback);
+        }, 1500);
     }
 
 
@@ -650,6 +663,7 @@ public class MapsActivity extends AppCompatActivity
     private void openWallPaperScreen() {
 
         if (!isOpen) {
+/*
 
             int x = mainContent.getRight();
             int y = mainContent.getBottom();
@@ -660,14 +674,19 @@ public class MapsActivity extends AppCompatActivity
             Animator anim =
                     ViewAnimationUtils.createCircularReveal(wallpaperAnim, x, y, startRadius,
                                                             endRadius);
+*/
 
             wallpaperAnim.setVisibility(View.VISIBLE);
-            anim.start();
+            //anim.start();
 
             isOpen = true;
 
         } else {
 
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapCard.getLayoutParams();
+            params.bottomToBottom = R.id.guideline2;
+            mapCard.requestLayout();
+/*
             int x = wallpaperAnim.getRight();
             int y = wallpaperAnim.getBottom();
 
@@ -686,7 +705,6 @@ public class MapsActivity extends AppCompatActivity
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-                    wallpaperAnim.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -699,7 +717,8 @@ public class MapsActivity extends AppCompatActivity
 
                 }
             });
-            anim.start();
+            anim.start();*/
+            wallpaperAnim.setVisibility(View.GONE);
 
             isOpen = false;
         }
@@ -915,7 +934,7 @@ public class MapsActivity extends AppCompatActivity
         String root  = Environment.getExternalStorageDirectory().toString();
         File   myDir = new File(root);
         myDir.mkdirs();
-        String fname = "Image-" + fileName + ".jpg";
+        String fname = "Image-" + fileName;
         File   file  = new File(myDir, fname);
         if (file.exists()) {
             file.delete();
