@@ -33,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.constraintlayout.widget.Group;
 import androidx.constraintlayout.widget.Guideline;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -109,6 +110,9 @@ public class MapsActivity extends AppCompatActivity
 
     @BindView(R.id.wallpaperAnim)
     ConstraintLayout wallpaperAnim;
+
+    @BindView(R.id.group)
+    Group group;
 
     @BindView(R.id.frameLayout)
     FrameLayout frameLayout;
@@ -422,6 +426,10 @@ public class MapsActivity extends AppCompatActivity
 
     private void closePopUp() {
         new Handler().postDelayed(() -> {
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapCard.getLayoutParams();
+            params.bottomToBottom = R.id.guideline2;
+            mapCard.requestLayout();
+
             wallpaperAnim.setVisibility(View.GONE);
             isOpen = false;
             setAsWallpaper.setText(getString(R.string.set_as_wallpaper));
@@ -521,6 +529,7 @@ public class MapsActivity extends AppCompatActivity
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapCard.getLayoutParams();
         params.bottomToBottom = R.id.linearLayout;
         mapCard.requestLayout();
+        group.setVisibility(View.GONE);
 
         new Handler().postDelayed(() -> {
             GoogleMap.SnapshotReadyCallback callback = snapshot -> {
@@ -529,13 +538,14 @@ public class MapsActivity extends AppCompatActivity
                     imageView.setImageBitmap(bitmap);
                     progressBar.setVisibility(View.GONE);
                     imageView.setVisibility(View.VISIBLE);
+                    group.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             };
 
             googleMap.snapshot(callback);
-        }, 1500);
+        }, 500);
     }
 
 
