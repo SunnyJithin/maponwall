@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Map on Wall</string>
+    <string name="app_name">MapOnWall</string>
     <string name="title_activity_maps">Map</string>
     <string name="descrition">descrition</string>
     <string name="set_as_wallpaper">Set as wallpaper</string>

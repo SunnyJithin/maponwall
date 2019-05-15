@@ -19,9 +19,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,9 +29,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.Group;
-import androidx.constraintlayout.widget.Guideline;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -61,6 +56,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jcapp.mapwallpaper.billing.BillingManager;
@@ -85,6 +81,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.jcapp.mapwallpaper.AppConstants.SEARCH_LOCATION;
 import static com.jcapp.mapwallpaper.billing.BillingManager.BILLING_MANAGER_NOT_INITIALIZED;
 
 public class MapsActivity extends AppCompatActivity
@@ -102,9 +99,6 @@ public class MapsActivity extends AppCompatActivity
     @BindView(R.id.styleList)
     RecyclerView styleRecyclerView;
 
-    @BindView(R.id.linearLayout)
-    ConstraintLayout mainContent;
-
     @BindView(R.id.mapCard)
     CardView mapCard;
 
@@ -113,12 +107,6 @@ public class MapsActivity extends AppCompatActivity
 
     @BindView(R.id.group)
     Group group;
-
-    @BindView(R.id.frameLayout)
-    FrameLayout frameLayout;
-
-    @BindView(R.id.closeButton)
-    ImageButton closeButton;
 
     @BindView(R.id.imageView)
     ImageView imageView;
@@ -129,14 +117,9 @@ public class MapsActivity extends AppCompatActivity
     @BindView(R.id.progressBar1)
     ProgressBar progressBar;
 
-    @BindView(R.id.guideline2)
-    Guideline guideline2;
-
     private BillingManager     mBillingManager;
     private MainViewController mViewController;
     private AcquireFragment    mAcquireFragment;
-    ConstraintSet constraintSet;
-
     private static final int    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private final        LatLng mDefaultLocation                         =
             new LatLng(-33.8523341, 151.2106085);
@@ -155,9 +138,13 @@ public class MapsActivity extends AppCompatActivity
     private boolean                     showText   = true;
     private boolean                     showMarker = true;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
         mapView.onCreate(savedInstanceState);
@@ -236,6 +223,7 @@ public class MapsActivity extends AppCompatActivity
 
     @OnClick(R.id.search)
     public void search() {
+        mFirebaseAnalytics.setCurrentScreen(this, SEARCH_LOCATION, null /* class override */);
         openSearchScreen();
     }
 
