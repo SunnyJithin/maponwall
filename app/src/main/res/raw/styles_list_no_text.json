@@ -17,19 +17,19 @@
   },
   {
     "name": "black_and_white_no_text",
-    "position": "four"
+    "position": "four1"
   },
   {
     "name": "blue_water_no_text",
-    "position": "five"
+    "position": "five1"
   },
   {
     "name": "bright_color_no_text",
-    "position": "six"
+    "position": "six1"
   },
   {
     "name": "dark_no_text",
-    "position": "seven"
+    "position": "six"
   },
   {
     "name": "night_no_text",
@@ -58,5 +58,33 @@
   {
     "name": "wy_no_text",
     "position": "fourteen"
+  },
+  {
+    "name": "abc_group_no_text",
+    "position": "fifteen"
+  },
+  {
+    "name": "av_no_text",
+    "position": "sixteen"
+  },
+  {
+    "name": "grainger_games_no_text",
+    "position": "seventeen"
+  },
+  {
+    "name": "lightwater_no_text",
+    "position": "eighteen"
+  },
+  {
+    "name": "ones_no_text",
+    "position": "ninteen"
+  },
+  {
+    "name": "paag_no_text",
+    "position": "twenty"
+  },
+  {
+    "name": "tbapro_no_text",
+    "position": "twentyone"
   }
 ]
