@@ -45,7 +45,7 @@ public class PremiumDelegate extends UiManagingDelegate {
         int textId = mBillingProvider.isPremiumPurchased() ? R.string.button_own
                 : R.string.button_buy;
         holder.button.setText(textId);
-        holder.skuIcon.setImageResource(R.drawable.ic_launcher_background);
+        holder.skuIcon.setImageResource(R.mipmap.ic_launcher);
     }
 
     @Override
