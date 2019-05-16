@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mapCard"
-    android:layout_width="wrap_content"
-    android:elevation="2dp"
-    android:layout_margin="1dp"
-    android:layout_height="match_parent">
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_margin="5dp"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="10dp">
 
-    <ImageView
-        android:id="@+id/styleImage"
-        android:layout_width="130dp"
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/lite_listrow_map"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/descrition"
-        android:visibility="visible" />
+        app:liteMode="true"
+        app:uiMapToolbar="false"
+        app:mapType="none" />
 </androidx.cardview.widget.CardView>

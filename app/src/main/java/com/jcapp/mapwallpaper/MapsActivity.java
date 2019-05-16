@@ -99,9 +99,6 @@ public class MapsActivity extends AppCompatActivity
     @BindView(R.id.styleList)
     RecyclerView styleRecyclerView;
 
-    @BindView(R.id.mapCard)
-    CardView mapCard;
-
     @BindView(R.id.wallpaperAnim)
     ConstraintLayout wallpaperAnim;
 
@@ -194,6 +191,7 @@ public class MapsActivity extends AppCompatActivity
             dividerItemDecoration.setDrawable(Objects.requireNonNull(
                     ContextCompat.getDrawable(this, R.drawable.itemdecoration)));
             styleRecyclerView.addItemDecoration(dividerItemDecoration);
+            styleRecyclerView.setRecyclerListener(mRecycleListener);
         } else {
             adapter.notifyDataSetChanged();
         }
@@ -414,9 +412,9 @@ public class MapsActivity extends AppCompatActivity
 
     private void closePopUp() {
         new Handler().postDelayed(() -> {
-            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapCard.getLayoutParams();
-            params.bottomToBottom = R.id.guideline2;
-            mapCard.requestLayout();
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapView.getLayoutParams();
+            params.bottomToBottom = R.id.styleList;
+            mapView.requestLayout();
 
             wallpaperAnim.setVisibility(View.GONE);
             isOpen = false;
@@ -514,9 +512,9 @@ public class MapsActivity extends AppCompatActivity
     public void captureScreen() {
         progressBar.setVisibility(View.VISIBLE);
         imageView.setVisibility(View.GONE);
-        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapCard.getLayoutParams();
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapView.getLayoutParams();
         params.bottomToBottom = R.id.linearLayout;
-        mapCard.requestLayout();
+        mapView.requestLayout();
         group.setVisibility(View.GONE);
 
         new Handler().postDelayed(() -> {
@@ -681,41 +679,9 @@ public class MapsActivity extends AppCompatActivity
 
         } else {
 
-            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapCard.getLayoutParams();
-            params.bottomToBottom = R.id.guideline2;
-            mapCard.requestLayout();
-/*
-            int x = wallpaperAnim.getRight();
-            int y = wallpaperAnim.getBottom();
-
-            int startRadius = Math.max(mainContent.getWidth(), mainContent.getHeight());
-            int endRadius   = 0;
-
-            Animator anim =
-                    ViewAnimationUtils.createCircularReveal(wallpaperAnim, x, y, startRadius,
-                                                            endRadius);
-
-            anim.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-
-                }
-            });
-            anim.start();*/
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapView.getLayoutParams();
+            params.bottomToBottom = R.id.styleList;
+            mapView.requestLayout();
             wallpaperAnim.setVisibility(View.GONE);
 
             isOpen = false;
@@ -949,4 +915,21 @@ public class MapsActivity extends AppCompatActivity
         closePopUp();
     }
 
+
+    /**
+     * RecycleListener that completely clears the {@link com.google.android.gms.maps.GoogleMap}
+     * attached to a row in the RecyclerView.
+     * Sets the map type to {@link com.google.android.gms.maps.GoogleMap#MAP_TYPE_NONE} and clears
+     * the map.
+     */
+    public RecyclerView.RecyclerListener mRecycleListener = holder -> {
+        StyleListAdapter.ItemRowHolder mapHolder = (StyleListAdapter.ItemRowHolder) holder;
+        if (mapHolder.map != null) {
+            // Clear the map and free up resources by changing the map type to none.
+            // Also reset the map when it gets reattached to layout, so the previous map would
+            // not be displayed.
+            mapHolder.map.clear();
+            mapHolder.map.setMapType(GoogleMap.MAP_TYPE_NONE);
+        }
+    };
 }
