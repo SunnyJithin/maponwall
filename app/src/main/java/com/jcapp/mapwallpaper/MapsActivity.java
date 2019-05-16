@@ -95,6 +95,9 @@ public class MapsActivity extends AppCompatActivity
 
     private GoogleMap googleMap;
 
+    @BindView(R.id.view)
+    View view;
+
     @BindView(R.id.mapView)
     MapView mapView;
 
@@ -414,7 +417,7 @@ public class MapsActivity extends AppCompatActivity
     private void closePopUp() {
         new Handler().postDelayed(() -> {
             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapView.getLayoutParams();
-            params.bottomToBottom = R.id.styleList;
+            params.bottomToBottom = R.id.view;
             mapView.requestLayout();
 
             wallpaperAnim.setVisibility(View.GONE);
@@ -673,7 +676,7 @@ public class MapsActivity extends AppCompatActivity
                                                             endRadius);
 */
 
-            wallpaperAnim.setVisibility(View.VISIBLE);
+             wallpaperAnim.setVisibility(View.VISIBLE);
             //anim.start();
 
             isOpen = true;
@@ -681,7 +684,7 @@ public class MapsActivity extends AppCompatActivity
         } else {
 
             ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mapView.getLayoutParams();
-            params.bottomToBottom = R.id.styleList;
+            params.bottomToBottom = R.id.view;
             mapView.requestLayout();
             wallpaperAnim.setVisibility(View.GONE);
 
