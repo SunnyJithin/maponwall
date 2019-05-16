@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -76,6 +77,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import am.appwise.components.ni.NoInternetDialog;
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -134,16 +136,19 @@ public class MapsActivity extends AppCompatActivity
     private boolean                     isOpen     = false;
     private boolean                     showText   = true;
     private boolean                     showMarker = true;
-
+    NoInternetDialog noInternetDialog;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
+        noInternetDialog = new NoInternetDialog.Builder(this)
+                .setCancelable(true)
+                .build();
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
+
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
         setStyleRecyclerView(showText);
@@ -170,6 +175,7 @@ public class MapsActivity extends AppCompatActivity
             mapView.onDestroy();
         }
         super.onDestroy();
+        noInternetDialog.onDestroy();
     }
 
     private void setStyleRecyclerView(boolean b) {
@@ -932,4 +938,5 @@ public class MapsActivity extends AppCompatActivity
             mapHolder.map.setMapType(GoogleMap.MAP_TYPE_NONE);
         }
     };
+
 }
