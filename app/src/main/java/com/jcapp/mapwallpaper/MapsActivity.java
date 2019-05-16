@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.Animator;
 import android.app.WallpaperManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -13,6 +14,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +30,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.app.ActivityCompat;
@@ -77,7 +78,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import am.appwise.components.ni.NoInternetDialog;
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -136,19 +136,15 @@ public class MapsActivity extends AppCompatActivity
     private boolean                     isOpen     = false;
     private boolean                     showText   = true;
     private boolean                     showMarker = true;
-    NoInternetDialog noInternetDialog;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        noInternetDialog = new NoInternetDialog.Builder(this)
-                .setCancelable(true)
-                .build();
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
-
+        isNetworkConnectionAvailable();
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
         setStyleRecyclerView(showText);
@@ -175,7 +171,6 @@ public class MapsActivity extends AppCompatActivity
             mapView.onDestroy();
         }
         super.onDestroy();
-        noInternetDialog.onDestroy();
     }
 
     private void setStyleRecyclerView(boolean b) {
@@ -938,5 +933,40 @@ public class MapsActivity extends AppCompatActivity
             mapHolder.map.setMapType(GoogleMap.MAP_TYPE_NONE);
         }
     };
+
+    public void checkNetworkConnection(){
+        AlertDialog.Builder builder =new AlertDialog.Builder(this);
+        builder.setTitle("No internet Connection");
+        builder.setMessage("Please turn on internet connection to continue");
+        builder.setNegativeButton("close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    public boolean isNetworkConnectionAvailable(){
+        ConnectivityManager cm =
+                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = null;
+        if (cm != null) {
+            activeNetwork = cm.getActiveNetworkInfo();
+        }
+        boolean isConnected = activeNetwork != null &&
+                              activeNetwork.isConnected();
+        if(isConnected) {
+            Log.d("Network", "Connected");
+            return true;
+        }
+        else{
+            checkNetworkConnection();
+            Log.d("Network","Not Connected");
+            return false;
+        }
+    }
 
 }
