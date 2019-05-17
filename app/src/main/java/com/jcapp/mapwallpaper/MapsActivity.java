@@ -569,7 +569,7 @@ public class MapsActivity extends AppCompatActivity
         if (isPremiumPurchased()) {
             setMapStyle(position);
             savePostionInShared(position);
-        } else if (position == 0) {
+        } else if (position == 0||position == 1||position == 2) {
             setMapStyle(position);
             savePostionInShared(position);
         } else {
