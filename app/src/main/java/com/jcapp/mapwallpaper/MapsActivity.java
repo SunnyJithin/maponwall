@@ -21,9 +21,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -93,8 +91,8 @@ import static com.jcapp.mapwallpaper.billing.BillingManager.BILLING_MANAGER_NOT_
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback, StyleListAdapter.RecyclerViewClickListener, BillingProvider {
 
-    private static final int AUTOCOMPLETE_REQUEST_CODE = 888;
-    private static final String DIALOG_TAG = "dialog";
+    private static final int    AUTOCOMPLETE_REQUEST_CODE = 888;
+    private static final String DIALOG_TAG                = "dialog";
 
 
     private GoogleMap googleMap;
@@ -126,27 +124,27 @@ public class MapsActivity extends AppCompatActivity
     @BindView(R.id.progressBar1)
     ProgressBar progressBar;
 
-    private BillingManager mBillingManager;
-    private MainViewController mViewController;
-    private AcquireFragment mAcquireFragment;
-    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private final LatLng mDefaultLocation =
+    private              BillingManager     mBillingManager;
+    private              MainViewController mViewController;
+    private              AcquireFragment    mAcquireFragment;
+    private static final int                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private final        LatLng             mDefaultLocation                         =
             new LatLng(-33.8523341, 151.2106085);
-    private static final int DEFAULT_ZOOM = 8;
-    private static final String SELECTED_POSITION = "selected_position";
-    private static final String PURCHASE_STATUS = "purchase_status";
+    private static final int                DEFAULT_ZOOM                             = 8;
+    private static final String             SELECTED_POSITION                        = "selected_position";
+    private static final String             PURCHASE_STATUS                          = "purchase_status";
 
 
-    private List<Style> styles;
-    private Bitmap bitmap;
+    private List<Style>                 styles;
+    private Bitmap                      bitmap;
     private FusedLocationProviderClient fusedLocationClient;
-    private boolean mLocationPermissionGranted;
-    private Location mLastKnownLocation;
-    private StyleListAdapter adapter;
-    private boolean isOpen = false;
-    private boolean showText = true;
-    private boolean showMarker = true;
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private boolean                     mLocationPermissionGranted;
+    private Location                    mLastKnownLocation;
+    private StyleListAdapter            adapter;
+    private boolean                     isOpen     = false;
+    private boolean                     showText   = true;
+    private boolean                     showMarker = true;
+    private FirebaseAnalytics           mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,14 +170,14 @@ public class MapsActivity extends AppCompatActivity
     }
 
     public void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
+        PopupMenu    popup    = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu, popup.getMenu());
         popup.show();
 
         popup.setOnMenuItemClickListener(item -> {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://sites.google.com/view/maponwallprivacypolicy/home"));
+                                              Uri.parse("https://sites.google.com/view/maponwallprivacypolicy/home"));
             startActivity(browserIntent);
             return true;
         });
@@ -218,7 +216,7 @@ public class MapsActivity extends AppCompatActivity
             styleRecyclerView.setLayoutManager(linearLayoutManager);
             DividerItemDecoration dividerItemDecoration =
                     new DividerItemDecoration(styleRecyclerView.getContext(),
-                            linearLayoutManager.getOrientation());
+                                              linearLayoutManager.getOrientation());
             dividerItemDecoration.setDrawable(Objects.requireNonNull(
                     ContextCompat.getDrawable(this, R.drawable.itemdecoration)));
             styleRecyclerView.addItemDecoration(dividerItemDecoration);
@@ -245,7 +243,7 @@ public class MapsActivity extends AppCompatActivity
         super.onResume();
 
         if (mBillingManager != null
-                && mBillingManager.getBillingClientResponseCode() == BillingClient.BillingResponse.OK) {
+            && mBillingManager.getBillingClientResponseCode() == BillingClient.BillingResponse.OK) {
             mBillingManager.queryPurchases();
         }
     }
@@ -294,10 +292,10 @@ public class MapsActivity extends AppCompatActivity
             }
 
             File imagePath = new File(getCacheDir(), "images");
-            File newFile = new File(imagePath, "image.png");
+            File newFile   = new File(imagePath, "image.png");
             Uri contentUri =
                     FileProvider.getUriForFile(this, "com.jcapp.mapwallpaper.fileprovider",
-                            newFile);
+                                               newFile);
 
             if (contentUri != null) {
                 Intent shareIntent = new Intent();
@@ -353,7 +351,7 @@ public class MapsActivity extends AppCompatActivity
                     View.inflate(this, R.layout.dialog_settings_layout, null);
             TextView checkBoxLock = checkBoxView.findViewById(R.id.checkBoxLock);
             TextView checkBoxHome = checkBoxView.findViewById(R.id.checkBoxHome);
-            TextView setAsBoth = checkBoxView.findViewById(R.id.setAsBoth);
+            TextView setAsBoth    = checkBoxView.findViewById(R.id.setAsBoth);
             AlertDialog alertDialog = builder.setView(checkBoxView)
                     .show();
 
@@ -390,15 +388,15 @@ public class MapsActivity extends AppCompatActivity
                     setAsWallpaper.revertAnimation(() -> {
                         setAsWallpaper.setText(getString(R.string.success));
                         setAsWallpaper.setBackground(ContextCompat.getDrawable(MapsActivity.this,
-                                R.drawable
-                                        .button_shape_default_rounded));
+                                                                               R.drawable
+                                                                                       .button_shape_default_rounded));
                     });
                 } else {
                     setAsWallpaper.revertAnimation(() -> {
                         setAsWallpaper.setText(getString(R.string.failed));
                         setAsWallpaper.setBackground(ContextCompat.getDrawable(MapsActivity.this,
-                                R.drawable
-                                        .button_shape_default_rounded));
+                                                                               R.drawable
+                                                                                       .button_shape_default_rounded));
                     });
                 }
                 closePopUp();
@@ -406,8 +404,8 @@ public class MapsActivity extends AppCompatActivity
                 setAsWallpaper.revertAnimation(() -> {
                     setAsWallpaper.setText(getString(R.string.failed));
                     setAsWallpaper.setBackground(ContextCompat.getDrawable(MapsActivity.this,
-                            R.drawable
-                                    .button_shape_default_rounded));
+                                                                           R.drawable
+                                                                                   .button_shape_default_rounded));
                 });
             }
         }, 1500);
@@ -466,7 +464,7 @@ public class MapsActivity extends AppCompatActivity
 
             case 100:
                 if ((grantResults.length > 0) &&
-                        (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     captureScreen();
                     openWallPaperScreen();
                 }
@@ -474,7 +472,7 @@ public class MapsActivity extends AppCompatActivity
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
                     updateLocationUI();
 
@@ -484,7 +482,7 @@ public class MapsActivity extends AppCompatActivity
 
             case 101:
                 if (grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     saveImage();
                 } else {
                     Log.e("value", "Permission Denied, You cannot use local drive .");
@@ -576,8 +574,8 @@ public class MapsActivity extends AppCompatActivity
                 id = R.raw.styles_list_no_text;
             }
             InputStream inputStream = getResources().openRawResource(id);
-            int size = inputStream.available();
-            byte[] buffer = new byte[size];
+            int         size        = inputStream.available();
+            byte[]      buffer      = new byte[size];
             inputStream.read(buffer);
             inputStream.close();
             json = new String(buffer, StandardCharsets.UTF_8);
@@ -605,13 +603,14 @@ public class MapsActivity extends AppCompatActivity
     }
 
     private void setMapStyle(int position) {
+
         if (position == 1) {
             googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             return;
         }
         try {
             Style style = styles.get(position);
-            int id = getResources().getIdentifier(style.getName(), "raw", getPackageName());
+            int   id    = getResources().getIdentifier(style.getName(), "raw", getPackageName());
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
             boolean success = googleMap.setMapStyle(
@@ -667,14 +666,14 @@ public class MapsActivity extends AppCompatActivity
          * onRequestPermissionsResult.
          */
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+                                              android.Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
         } else {
             ActivityCompat.requestPermissions(this,
-                    new String[]{
-                            android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+                                              new String[]{
+                                                      android.Manifest.permission.ACCESS_FINE_LOCATION},
+                                              PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
 
@@ -720,8 +719,8 @@ public class MapsActivity extends AppCompatActivity
     }
 
     private void savePurchaseStatus(boolean purchased) {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
+        SharedPreferences        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor     = sharedPref.edit();
         editor.putBoolean(PURCHASE_STATUS, purchased);
         editor.apply();
     }
@@ -733,8 +732,8 @@ public class MapsActivity extends AppCompatActivity
 
 
     private void savePostionInShared(int selectedPosition) {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
+        SharedPreferences        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor     = sharedPref.edit();
         editor.putInt(SELECTED_POSITION, selectedPosition);
         editor.apply();
     }
@@ -747,14 +746,14 @@ public class MapsActivity extends AppCompatActivity
     private void showMarkerInMap(boolean b) {
 
         if (mLastKnownLocation != null && googleMap != null) {
-            double lat = mLastKnownLocation.getLatitude();
+            double lat       = mLastKnownLocation.getLatitude();
             double longitude = mLastKnownLocation.getLongitude();
             googleMap.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(new LatLng(lat, longitude), DEFAULT_ZOOM));
             if (b) {
                 googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, longitude)).icon(
                         generateBitmapDescriptorFromRes(MapsActivity.this,
-                                R.drawable.ic_flag_map_marker)));
+                                                        R.drawable.ic_flag_map_marker)));
             } else {
                 googleMap.clear();
             }
@@ -808,14 +807,14 @@ public class MapsActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Place place = Autocomplete.getPlaceFromIntent(data);
+                Place  place  = Autocomplete.getPlaceFromIntent(data);
                 LatLng latLng = place.getLatLng();
                 googleMap.clear();
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
                 if (showMarker) {
                     googleMap.addMarker(new MarkerOptions().position(latLng).icon(
                             generateBitmapDescriptorFromRes(MapsActivity.this,
-                                    R.drawable.ic_flag_map_marker)));
+                                                            R.drawable.ic_flag_map_marker)));
                 } else {
                     googleMap.clear();
                 }
@@ -836,8 +835,8 @@ public class MapsActivity extends AppCompatActivity
             mAcquireFragment.show(getSupportFragmentManager(), DIALOG_TAG);
 
             if (mBillingManager != null
-                    && mBillingManager.getBillingClientResponseCode()
-                    > BILLING_MANAGER_NOT_INITIALIZED) {
+                && mBillingManager.getBillingClientResponseCode()
+                   > BILLING_MANAGER_NOT_INITIALIZED) {
                 mAcquireFragment.onManagerReady(this);
             }
         }
@@ -923,14 +922,14 @@ public class MapsActivity extends AppCompatActivity
     private void saveImage() {
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US);
-        Date now = new Date();
-        String fileName = formatter.format(now) + ".jpg";
+        Date             now       = new Date();
+        String           fileName  = formatter.format(now) + ".jpg";
 
-        String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root);
+        String root  = Environment.getExternalStorageDirectory().toString();
+        File   myDir = new File(root);
         myDir.mkdirs();
         String fname = "Image-" + fileName;
-        File file = new File(myDir, fname);
+        File   file  = new File(myDir, fname);
         if (file.exists()) {
             file.delete();
         }
@@ -987,7 +986,7 @@ public class MapsActivity extends AppCompatActivity
             activeNetwork = cm.getActiveNetworkInfo();
         }
         boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnected();
+                              activeNetwork.isConnected();
         if (isConnected) {
             Log.d("Network", "Connected");
             return true;

@@ -361,5 +361,13 @@
         "visibility": "off"
       }
     ]
+  },
+  {
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
   }
 ]

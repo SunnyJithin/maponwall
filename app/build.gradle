@@ -10,7 +10,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.jcapp.mapwallpaper"
-        minSdkVersion 23
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 13
         versionName "1.0"
