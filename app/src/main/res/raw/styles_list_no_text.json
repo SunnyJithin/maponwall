@@ -110,5 +110,21 @@
   {
     "name": "three_no_text",
     "position": "twentyone"
+  },
+  {
+    "name": "brokka_map_no_text",
+    "position": "brokka_map"
+  },
+  {
+    "name": "caption_no_text",
+    "position": "caption"
+  },
+  {
+    "name": "proactive_no_text",
+    "position": "proactive"
+  },
+  {
+    "name": "vintage_blue_yellow_no_text",
+    "position": "vintage_blue_yellow"
   }
 ]
