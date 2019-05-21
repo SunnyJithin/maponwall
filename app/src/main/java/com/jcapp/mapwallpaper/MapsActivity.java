@@ -88,6 +88,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.jcapp.mapwallpaper.AppConstants.SEARCH_LOCATION;
+import static com.jcapp.mapwallpaper.MapsUtils.generateBitmapDescriptorFromRes;
 import static com.jcapp.mapwallpaper.billing.BillingManager.BILLING_MANAGER_NOT_INITIALIZED;
 
 public class MapsActivity extends AppCompatActivity
@@ -762,22 +763,6 @@ public class MapsActivity extends AppCompatActivity
     }
 
 
-    public static BitmapDescriptor generateBitmapDescriptorFromRes(
-            Context context, int resId) {
-        Drawable drawable = ContextCompat.getDrawable(context, resId);
-        drawable.setBounds(
-                0,
-                0,
-                drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight());
-        Bitmap bitmap = Bitmap.createBitmap(
-                drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(),
-                Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
 
     private void openSearchScreen() {
         /**
